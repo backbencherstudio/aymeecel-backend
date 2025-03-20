@@ -13,18 +13,27 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://10.0.2.2:8081",
+      "http://192.168.30.102:3000",
+      "http://192.168.30.102:*",
+      "http://localhost:3000",
+      "http://localhost:3001",
       "http://localhost:*",
-      "http://localhost:58626",
-      "http://localhost:61801",
-      "http://localhost:50265",
-      "http://192.168.40.47:3000",
-      "http://192.168.40.47:*"
+      'http://192.168.30.102:3000',
+      "http://192.168.30.102:3001",
+      "http://192.168.30.102:3003",
+      "http://192.168.40.47:3004",
+      "http://192.168.30.102:*",
+      "http://localhost:3002",
+      "http://192.168.40.10:4000",
     ],
+    // credentials: true, // Important for cookies
+    // allowedHeaders: ["Content-Type", "Authorization"],
+    // methods: ["GET", "POST", "PUT", "PATCH" , "DELETE", "OPTIONS"],
   })
 );
+
+// app.set('trust proxy', 1);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan("dev"));

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Post } from "@prisma/client";
 import upload from "../../config/multer.config";
 import fs from "fs";
 import path from "path";
@@ -42,16 +42,34 @@ export const createPost = async (req: Request, res: Response) => {
 };
 
 export const getAllPosts = async (req: Request, res: Response) => {
+
   try {
+    let { page = "1", limit = "5" } = req.query;
+
+    const pageNumber = parseInt(page as string, 10);
+    const limitNumber = parseInt(limit as string, 10);
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const totalPosts = await prisma.post.count();
+    const totalPages = Math.ceil(totalPosts / limitNumber);
+
     const posts = await prisma.post.findMany({
+      skip,
+      take: limitNumber,
       orderBy: {
         createdAt: "desc",
       },
     });
 
+    const nextPage = pageNumber < totalPages;
+
     res.status(200).json({
       success: true,
       message: "Posts retrieved successfully",
+      currentPage: pageNumber,
+      totalPages,
+      totalPosts,
+      nextPage,
       posts,
     });
   } catch (error) {
@@ -66,7 +84,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
 export const getSinglePost = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-
+    console.log(id)
     const post = await prisma.post.findUnique({
       where: {
         id: String(id),
@@ -77,6 +95,7 @@ export const getSinglePost = async (req: Request, res: Response) => {
       res.status(404).json({
         message: "Post not found",
       });
+      return;
     }
 
     res.status(200).json({
@@ -92,6 +111,76 @@ export const getSinglePost = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+
+export const searchPosts = async (req: Request, res: Response) => {
+  try {
+    const { query } = req.query;
+    console.log("Search query:", query);
+
+    if (!query) {
+       res.status(400).json({
+        success: false,
+        message: "Search query is required",
+      });
+      return
+    }
+
+    const posts = await prisma.$queryRaw`
+      SELECT * FROM posts
+      WHERE descriptions::text ILIKE ${'%' + query + '%'}
+      ORDER BY "createdAt" DESC
+    `;
+
+    console.log("Found Posts:", posts);
+
+    res.status(200).json({
+      success: true,
+      message: "Posts retrieved successfully",
+      posts,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error instanceof Error ? error.message : error,
+    });
+  }
+};
+
+// export const getSearchPosts = async (req: Request, res: Response) => {
+//   try {
+//     const { query } = req.query;
+//     if (!query) {
+//       res.status(400).json({
+//         success: false,
+//         message: "Search query is required",
+//       });
+//       return;
+//     }
+
+//     const posts = await prisma.$queryRaw`
+//       SELECT * FROM "posts"
+//       WHERE descriptions::text ILIKE ${"%" + query + "%"}
+//       ORDER BY "created_at" DESC
+//     `;
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Search results retrieved successfully",
+//       totalResults: posts,
+//       posts,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong",
+//       error,
+//     });
+//   }
+// };
 
 export const updatePost = async (req: Request, res: Response) => {
   try {
