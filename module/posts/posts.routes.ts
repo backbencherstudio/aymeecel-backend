@@ -19,4 +19,5 @@ router.put("/:id", verifyUser, upload.single("image"), updatePost);
 
 router.delete("/:id", verifyUser, deletePost);
 
+
 export default router;
