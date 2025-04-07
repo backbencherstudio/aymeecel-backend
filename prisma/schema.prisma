@@ -36,21 +36,3 @@ enum Role {
   ADMIN
 }
 
-// {
-//   "id": "1",
-//   "image": "path/to/image1.jpg",
-//   "categories": [
-//     {
-//       "id": "101",
-//       "name": "AI",
-//       "description": "Artificial Intelligence"
-//     },
-//     {
-//       "id": "102",
-//       "name": "CHILD",
-//       "description": "For children"
-//     }
-//   ],
-//   "createdAt": "2023-10-01T12:00:00Z",
-//   "updatedAt": "2023-10-01T12:00:00Z"
-// }
