@@ -4,4 +4,3 @@ export const getImageUrl = (imagePath: string) => {
 
 export const baseUrl = process.env.APP_URL;
 
-// module.exports = { getImageUrl, baseUrl };
