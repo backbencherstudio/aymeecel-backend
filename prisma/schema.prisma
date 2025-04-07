@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  image     String?
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Post {
+  id              String   @id @default(cuid())
+  image           String
+  descriptions_en Json?
+  descriptions_de Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("posts")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// {
+//   "id": "1",
+//   "image": "path/to/image1.jpg",
+//   "categories": [
+//     {
+//       "id": "101",
+//       "name": "AI",
+//       "description": "Artificial Intelligence"
+//     },
+//     {
+//       "id": "102",
+//       "name": "CHILD",
+//       "description": "For children"
+//     }
+//   ],
+//   "createdAt": "2023-10-01T12:00:00Z",
+//   "updatedAt": "2023-10-01T12:00:00Z"
+// }
