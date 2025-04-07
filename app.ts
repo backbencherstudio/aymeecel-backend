@@ -26,13 +26,8 @@ app.use(
       "http://localhost:3002",
       "http://192.168.40.10:4000",
     ],
-    // credentials: true, // Important for cookies
-    // allowedHeaders: ["Content-Type", "Authorization"],
-    // methods: ["GET", "POST", "PUT", "PATCH" , "DELETE", "OPTIONS"],
   })
 );
-
-// app.set('trust proxy', 1);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
