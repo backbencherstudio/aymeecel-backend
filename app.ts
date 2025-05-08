@@ -25,6 +25,7 @@ app.use(
       "http://192.168.30.102:*",
       "http://localhost:3002",
       "http://192.168.40.10:4000",
+      "https://aymeecel-client.vercel.app"
     ],
   })
 );
